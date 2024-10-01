@@ -8,16 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const userChoiceSpan = document.getElementById('user-choice');
     const computerChoiceSpan = document.getElementById('computer-choice');
     const resultText = document.getElementById('result');
+    const currentRoundSpan = document.getElementById('current-round');
+    const totalRoundsSpan = document.getElementById('total-rounds');
 
     let userScore = 0;
     let computerScore = 0;
     let rounds = parseInt(roundsSelect.value);
     let currentRound = 0;
     let userChoice = '';
+    let gameState = 'playing'; // 'playing', 'waitingForNextRound', 'gameOver'
+
+    // Initialize total rounds display
+    totalRoundsSpan.textContent = rounds;
 
     // Update rounds when selection changes
     roundsSelect.addEventListener('change', () => {
         rounds = parseInt(roundsSelect.value);
+        totalRoundsSpan.textContent = rounds;
         resetGame();
     });
 
@@ -32,8 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Start the game by attaching the playRound function to the Go button
-    goButton.addEventListener('click', playRound);
+    // Handle Go button clicks based on game state
+    goButton.addEventListener('click', () => {
+        if (gameState === 'playing') {
+            playRound();
+        } else if (gameState === 'waitingForNextRound') {
+            nextRound();
+        } else if (gameState === 'gameOver') {
+            resetGame();
+        }
+    });
 
     function playRound() {
         if (!userChoice) {
@@ -48,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateScore(winner);
 
         currentRound++;
+        currentRoundSpan.textContent = currentRound;
 
         // Display the result
         resultText.textContent = `Round ${currentRound} Result: ${winner}`;
@@ -55,14 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentRound >= rounds) {
             declareFinalWinner();
             goButton.textContent = 'Restart Game';
-            // Update the event listener
-            goButton.removeEventListener('click', playRound);
-            goButton.addEventListener('click', resetGame);
+            gameState = 'gameOver';
         } else {
             goButton.textContent = 'Next Round';
-            // Update the event listener
-            goButton.removeEventListener('click', playRound);
-            goButton.addEventListener('click', nextRound);
+            gameState = 'waitingForNextRound';
         }
     }
 
@@ -74,10 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultText.textContent = 'Make your move!';
         choiceButtons.forEach(btn => btn.classList.remove('selected'));
         goButton.textContent = 'Go';
-
-        // Update the event listener
-        goButton.removeEventListener('click', nextRound);
-        goButton.addEventListener('click', playRound);
+        gameState = 'playing';
     }
 
     function determineWinner(user, computer) {
@@ -125,8 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
         goButton.textContent = 'Go';
         choiceButtons.forEach(btn => btn.classList.remove('selected'));
 
-        // Update the event listener
-        goButton.removeEventListener('click', resetGame);
-        goButton.addEventListener('click', playRound);
+        // Reset current round display
+        currentRoundSpan.textContent = currentRound;
+        totalRoundsSpan.textContent = rounds;
+
+        gameState = 'playing';
     }
 });
