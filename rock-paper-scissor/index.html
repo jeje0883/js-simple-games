@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rock-Paper-Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .choices {
+            margin: 20px 0;
+        }
+        .choice-button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result, #scoreboard {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        #go-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .selected {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock-Paper-Scissors Game</h1>
+
+    <div>
+        <label for="rounds">Number of Rounds:</label>
+        <select id="rounds">
+            <option value="1">1</option>
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+
+    <div class="choices">
+        <button class="choice-button" data-choice="ROCK">Rock</button>
+        <button class="choice-button" data-choice="PAPER">Paper</button>
+        <button class="choice-button" data-choice="SCISSOR">Scissor</button>
+    </div>
+
+    <div id="scoreboard">
+        <p>User Score: <span id="user-score">0</span></p>
+        <p>Computer Score: <span id="computer-score">0</span></p>
+    </div>
+
+    <div id="game-info">
+        <p>Your Choice: <span id="user-choice">-</span></p>
+        <p>Computer's Choice: <span id="computer-choice">-</span></p>
+        <h2 id="result">Make your move!</h2>
+    </div>
+
+    <button id="go-button">Go</button>
+
+    <script src="index.js"></script>
+</body>
+</html>
