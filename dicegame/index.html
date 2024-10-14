@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        .dice {
+            font-size: 5em;
+            margin: 20px;
+        }
+        #winner {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: green;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dice Game</h1>
+    <div>
+        <div>
+            <span id="player1Dice" class="dice">🎲</span>
+            <span>vs</span>
+            <span id="player2Dice" class="dice">🎲</span>
+        </div>
+        <button id="rollDiceButton">Roll Dice</button>
+    </div>
+    <p id="winner"></p>
+
+    <script src="index.js"></script>
+</body>
+</html>
