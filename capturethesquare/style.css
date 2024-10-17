@@ -1,0 +1,39 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f7f7f7;
+  }
+  
+  .game-container {
+    text-align: center;
+  }
+  
+  .game-area {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+    background-color: lightblue;
+    border: 2px solid #333;
+    overflow: hidden;
+  }
+  
+  #square {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    cursor: pointer;
+    display: none;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
