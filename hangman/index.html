@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Hangman Game with Word Length Option</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 30px;
+        }
+        #word {
+            font-size: 2em;
+            letter-spacing: 10px;
+        }
+        #message {
+            font-size: 1.2em;
+            color: red;
+        }
+        #letters button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #letters button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+        #hangman {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        #controls {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 5px;
+            font-size: 1em;
+        }
+        #startBtn {
+            padding: 5px 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #startBtn:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hangman Game</h1>
+    <div id="controls">
+        <label for="wordLength">Select Word Length:</label>
+        <select id="wordLength">
+            <!-- Options will be populated dynamically -->
+        </select>
+        <button id="startBtn">Start Game</button>
+    </div>
+    <div id="word"></div>
+    <div id="message"></div>
+    <div id="letters"></div>
+    <div id="hangman"></div>
+
+    <script>
+        const words = [
+            // Words of length 4
+            "code", "java", "ruby", "perl", "data", "html", "bash", "node", "ajax", "json",
+            // Words of length 5
+            "script", "array", "loops", "merge", "class", "input", "debug", "while", "break", "catch",
+            // Words of length 6
+            "python", "object", "method", "string", "number", "boolean", "prompt", "random", "return", "export",
+            // Words of length 7
+            "program", "console", "network", "browser", "virtual", "compile", "package", "pointer", "dynamic", "default",
+            // Words of length 8
+            "function", "operator", "variable", "abstract", "callback", "document", "iterator", "protocol", "database", "pipeline",
+            // Words of length 9
+            "algorithm", "exception", "interface", "namespace", "prototype", "reference", "signature", "parameter", "middleware", "framework",
+            // Words of length 10
+            "javascript", "deployment", "dependency", "architecture", "constructor", "inheritance", "asynchronous", "serialization", "transpiler", "polymorphic"
+        ];
+
+        let selectedWord = '';
+        let guessedLetters = [];
+        let wrongGuesses = 0;
+        const maxWrongGuesses = 6;
+
+        const wordDisplay = document.getElementById('word');
+        const messageDisplay = document.getElementById('message');
+        const lettersDiv = document.getElementById('letters');
+        const hangmanDisplay = document.getElementById('hangman');
+        const wordLengthSelect = document.getElementById('wordLength');
+        const startBtn = document.getElementById('startBtn');
+        const controlsDiv = document.getElementById('controls');
+
+        // Populate word length options
+        function populateWordLengthOptions() {
+            for (let i = 4; i <= 10; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                wordLengthSelect.appendChild(option);
+            }
+        }
+
+        function initGame() {
+            // Reset game variables
+            guessedLetters = [];
+            wrongGuesses = 0;
+            messageDisplay.innerHTML = '';
+            hangmanDisplay.innerHTML = 'Wrong guesses: 0';
+            lettersDiv.innerHTML = '';
+            wordDisplay.innerHTML = '';
+
+            // Get selected word length
+            let selectedLength = parseInt(wordLengthSelect.value);
+
+            // Filter words by selected length
+            let filteredWords = words.filter(word => word.length === selectedLength);
+
+            // Select a random word from filtered words
+            selectedWord = filteredWords[Math.floor(Math.random() * filteredWords.length)].toUpperCase();
+
+            // Generate letter buttons
+            for (let i = 65; i <= 90; i++) {
+                let button = document.createElement('button');
+                button.innerHTML = String.fromCharCode(i);
+                button.onclick = guessLetter;
+                lettersDiv.appendChild(button);
+            }
+
+            updateWordDisplay();
+            // Disable controls until game ends
+            wordLengthSelect.disabled = true;
+            startBtn.disabled = true;
+        }
+
+        function updateWordDisplay() {
+            let displayWord = '';
+            for (let letter of selectedWord) {
+                if (guessedLetters.includes(letter)) {
+                    displayWord += letter + ' ';
+                } else {
+                    displayWord += '_ ';
+                }
+            }
+            wordDisplay.innerHTML = displayWord.trim();
+        }
+
+        function guessLetter(event) {
+            let letter = event.target.innerHTML;
+            event.target.disabled = true;
+            if (selectedWord.includes(letter)) {
+                guessedLetters.push(letter);
+                updateWordDisplay();
+                checkWin();
+            } else {
+                wrongGuesses++;
+                hangmanDisplay.innerHTML = `Wrong guesses: ${wrongGuesses}`;
+                checkLose();
+            }
+        }
+
+        function checkWin() {
+            let currentGuess = '';
+            for (let letter of selectedWord) {
+                if (guessedLetters.includes(letter)) {
+                    currentGuess += letter;
+                } else {
+                    return;
+                }
+            }
+            messageDisplay.style.color = 'green';
+            messageDisplay.innerHTML = 'You Win!';
+            endGame();
+        }
+
+        function checkLose() {
+            if (wrongGuesses >= maxWrongGuesses) {
+                messageDisplay.style.color = 'red';
+                messageDisplay.innerHTML = `You Lose! The word was "${selectedWord}".`;
+                updateWordDisplay(); // Reveal the word
+                endGame();
+            }
+        }
+
+        function endGame() {
+            let buttons = lettersDiv.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.disabled = true;
+            }
+            // Re-enable controls for a new game
+            wordLengthSelect.disabled = false;
+            startBtn.disabled = false;
+            startBtn.textContent = 'Play Again';
+        }
+
+        // Initialize word length options and attach event listener to start button
+        populateWordLengthOptions();
+        startBtn.addEventListener('click', initGame);
+    </script>
+
+</body>
+</html>
